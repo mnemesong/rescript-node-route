@@ -6,6 +6,10 @@ let routes: array<Router.route> =
       , urls: ["/"]
       , handler: printReqFunction
       }
+    , { methods: [#get]
+      , urls: ["/hello"]
+      , handler: (req) => {code: 200, headers: {"Content-Type": "text/plain"}, answer: "Hello!"}
+      }
     ]
 
 let unhandlingRequestHandler: Router.unhandlingRequestHandlerFunc =

@@ -16,5 +16,8 @@
         "module": "commonjs"
       }
     ],
-    "suffix": ".bs.js"
+    "suffix": ".bs.js",
+    "warnings": {
+      "number": "-27"
+    }
   }
