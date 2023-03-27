@@ -1,7 +1,7 @@
-let printReqFunction: Router.requestHandlerFunc = 
+let printReqFunction: Http.requestHandlerFunc = 
     %raw(`(req) => ({code: 200, headers: [], answer: req.method})`)
 
-let routes: array<Router.route> =
+let routes: array<Http.route> =
     [ { methods: [#get, #patch]
       , urls: ["/"]
       , handler: printReqFunction
@@ -12,10 +12,10 @@ let routes: array<Router.route> =
       }
     ]
 
-let unhandlingRequestHandler: Router.unhandlingRequestHandlerFunc =
+let unhandlingRequestHandler: Http.unhandlingRequestHandlerFunc =
     (req) => { code: 500, headers: {"Content-Type": "text/plain"}, answer: "Страницы не существует!"}
 
-Router.createHttpServer(
+Http.createHttpServer(
     routes, 
     unhandlingRequestHandler, 
     80, 

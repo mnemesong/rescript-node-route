@@ -9,8 +9,7 @@ type answer  =
     }
 
 type request =   
-    { url
-    : string
+    { url: string
     }
 
 type method =   
