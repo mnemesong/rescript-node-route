@@ -23,6 +23,7 @@ type method =
     ]
 
 type requestHandlerFunc = (request) => answer
+type unhandlingRequestHandlerFunc = requestHandlerFunc
 
 type route = 
     { urls: array<string>
@@ -34,7 +35,8 @@ type port = int
 
 type onInitFunc = () => unit
 
-type createHttpServerFunc = (array<route>, port, onInitFunc) => unit
+type createHttpServerFunc = 
+    (array<route>, unhandlingRequestHandlerFunc, port, onInitFunc) => unit
 
 //let answerReqHeandler: answerFunc<requestHandlerFunc>
 //    = (handler, req, headers: 'headers) => {
@@ -118,10 +120,10 @@ type createHttpServerFunc = (array<route>, port, onInitFunc) => unit
 //    }
 
 let createHttpServer: createHttpServerFunc = %raw(`
-function(routes, port, onInit) {
+function(routes, unhandlingRequestHandler, port, onInit) {
     const http = require('http');
     const server = http.createServer((req, res) => {
-        routes.some(r => {
+        const isHandled = routes.some(r => {
             const metLC = req.method.toLowerCase();
             if(((r.urls.includes(req.url)) 
                 || (r.urls.includes(req.url + '/'))) 
@@ -134,6 +136,11 @@ function(routes, port, onInit) {
             }
             return false;
         });
+        if(!isHandled) {
+            const ans = unhandlingRequestHandler(req)
+            res.writeHead(ans.code, ans.headers);
+            res.write(ans.answer);
+        }
         res.end();
     });
     server.listen(port, onInit);

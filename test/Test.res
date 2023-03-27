@@ -8,4 +8,12 @@ let routes: array<Router.route> =
       }
     ]
 
-Router.createHttpServer(routes, 80, %raw("() => {console.log('start')}"))
+let unhandlingRequestHandler: Router.unhandlingRequestHandlerFunc =
+    (req) => { code: 500, headers: {"Content-Type": "text/plain"}, answer: "Страницы не существует!"}
+
+Router.createHttpServer(
+    routes, 
+    unhandlingRequestHandler, 
+    80, 
+    %raw("() => {console.log('start')}")
+)
