@@ -22,7 +22,6 @@ type method =
     ]
 
 type requestHandlerFunc = (request) => answer
-type unhandlingRequestHandlerFunc = requestHandlerFunc
 
 type route = 
     { urls: array<string>
@@ -30,12 +29,14 @@ type route =
     , handler: requestHandlerFunc
     }
 
-type port = int
-
 type onInitFunc = () => unit
 
 type createHttpServerFunc = 
-    (array<route>, unhandlingRequestHandlerFunc, port, onInitFunc) => unit
+    ( ~routes: array<route>
+    , ~unhandledReqHandler: requestHandlerFunc
+    , ~port: int
+    , ~onInit: () => unit
+    ) => unit
 
 let createHttpServer: createHttpServerFunc = %raw(`
 function(routes, unhandlingRequestHandler, port, onInit) {
